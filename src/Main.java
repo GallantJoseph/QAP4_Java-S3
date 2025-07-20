@@ -1,4 +1,7 @@
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -140,10 +143,44 @@ public class Main {
     }
 
     private static void saveDataDB() {
+        final String query = "INSERT INTO parts (name, description, category, unit_price, quantity_on_hand) VALUES (?,?,?,?,?)";
+        final ArrayList<Part> parts = new ArrayList<>();
 
+        Part cpuPart = new Part( "AMD Ryzen 5700G",
+                "AMD Ryzen 5700G Processor, Socket: AM4.", "cpu", 209.99, 10);
+        Part mirrorPart = new Part("Chevrolet Spark 2019 Mirror (R)",
+                "Right mirror for the 2019 Chevrolet Spark.", "mirror", 199.99, 2);
+        Part absPipe = new Part("1/2\" ABS Pipe 8'",
+                "Generic 8' 1/2\" ABS Pipe", "pipe", 15.99,20);
+
+        parts.add(cpuPart);
+        parts.add(mirrorPart);
+        parts.add(absPipe);
+
+        // Set up the connection and add every part to the database
+        try {
+            Connection con = DatabaseConnection.getCon();
+
+            for(Part part : parts) {
+                PreparedStatement statement = con.prepareStatement(query);
+
+                statement.setString(1, part.getName());
+                statement.setString(2, part.getDescription());
+                statement.setString(3, part.getCategory());
+                statement.setDouble(4, part.getUnitPrice());
+                statement.setInt(5, part.getQuantityOnHand());
+
+                statement.executeUpdate();
+
+                System.out.println(part.getName() + " successfully added to the database.");
+            }
+
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
     }
 
     private static void readDataDB() {
-
+        final String query = "SELECT * FROM part";
     }
 }

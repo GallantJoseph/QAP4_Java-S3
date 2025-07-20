@@ -1,6 +1,7 @@
 # QAP4_Java-S3
 <h1>QAP 4 - Database and File Handling</h1>
 Practice assessment for reading and writing Event objects to, and from a file; and Part objects to, and from a database.<br>
+The main program, including the menu, is stored in the Main class.
 <ul>
     <li>The Event class stores information about events, such as parties, weddings, and graduations.</li>
     <li>The Part class stores information about parts, such as computers, cars, and plumbing.</li>
