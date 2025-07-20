@@ -1,3 +1,6 @@
+import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -18,14 +21,15 @@ public class Main {
         System.out.println("\n*** Thank you for using my program. Have a nice day! ***");
     }
 
-    public static void MainMenu(Scanner scanner) {
+    private static void MainMenu(Scanner scanner) {
         final int MIN_OPT = 1;
         final int MAX_OPT = 5;
+        final String EVENT_FILENAME = "event.txt";
         int option = 0;
 
         while (option != 5) {
             // Header
-            System.out.println("              Main Menu               ");
+            System.out.println("\n              Main Menu               ");
             System.out.println("**************************************");
             System.out.println("1. Save data to a file");
             System.out.println("2. Read data from a file");
@@ -53,10 +57,10 @@ public class Main {
 
             switch (option){
                 case 1:
-                    saveDataFile();
+                    saveDataFile(EVENT_FILENAME);
                     break;
                 case 2:
-                    readDataFile();
+                    readDataFile(EVENT_FILENAME);
                     break;
                 case 3:
                     saveDataDB();
@@ -70,19 +74,70 @@ public class Main {
         }
     }
 
-    private static void readDataDB() {
+    private static void saveDataFile(String eventFilename) {
+        // Create new Events to save to a file
+        Event beachEvent = new Event("Beach Party", "Sandy Cove Beach, NL", LocalDate.parse("2025-08-10"));
+        Event graduationEvent = new Event("Graduation Party", "Keyin College, St. John's, NL", LocalDate.parse("2025-11-15"));
+        Event marathonEvent = new Event("Marathon for Life", "Downtown St. John's", LocalDate.parse("2025-10-18"));
 
+        // Save the Event objects to a file
+        try {
+            FileOutputStream eventFos = new FileOutputStream(eventFilename);
+            ObjectOutputStream eventOos = new ObjectOutputStream(eventFos);
+
+            eventOos.writeObject(beachEvent);
+            eventOos.writeObject(graduationEvent);
+            eventOos.writeObject(marathonEvent);
+
+            eventFos.close();
+            eventOos.close();
+
+            System.out.println("\nEvent objects saved successfully to " + eventFilename + ":\n");
+            System.out.println(beachEvent);
+            System.out.println(graduationEvent);
+            System.out.println(marathonEvent);
+        } catch (IOException ioe) {
+            System.out.println("\nError while saving the Event objects to " + eventFilename);
+            ioe.printStackTrace();
+        }
+    }
+
+    private static void readDataFile(String eventFilename) {
+
+        // Read the event objects from a file
+        try {
+            FileInputStream eventFis = new FileInputStream(eventFilename);
+            ObjectInputStream eventOis = new ObjectInputStream(eventFis);
+
+            // Create an Event list to store the Event objects be read from a file
+            ArrayList<Event> events = new ArrayList<>();
+
+            while (true) {
+                try {
+                    events.add((Event) eventOis.readObject());
+                } catch (ClassNotFoundException | EOFException e) {
+                    break;
+                }
+            }
+
+            eventFis.close();
+            eventOis.close();
+
+            System.out.println("\nEvent objects read successfully from " + eventFilename + ":\n");
+
+            // Print each Event from the list
+            events.forEach(System.out::println);
+        } catch (IOException ioe) {
+            System.out.println("\nError while reading the Event objects from " + eventFilename);
+            ioe.printStackTrace();
+        }
     }
 
     private static void saveDataDB() {
 
     }
 
-    private static void readDataFile() {
-
-    }
-
-    private static void saveDataFile() {
+    private static void readDataDB() {
 
     }
 }
