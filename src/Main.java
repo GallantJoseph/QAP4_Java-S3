@@ -127,7 +127,10 @@ public class Main {
 
             // Print each Event from the list
             events.forEach(System.out::println);
-        } catch (IOException ioe) {
+        }  catch (FileNotFoundException fnfe) {
+            System.out.println("\nThe file " + eventFilename + " doesn't exist.");
+        }
+        catch (IOException ioe) {
             System.out.println("\nError while reading the Event objects from " + eventFilename);
             ioe.printStackTrace();
         }
