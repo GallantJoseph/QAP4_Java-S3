@@ -7,18 +7,30 @@ import java.io.Serializable;
  */
 
 public class Part implements Serializable {
+    // Private attributes
+    private int id;
     private String name;
     private String description;
     private String category;
     private double unitPrice;
     private int quantityOnHand;
 
+    // Constructor
     public Part(String name, String description, String type, double unitPrice, int quantityOnHand){
         this.name = name;
         this.description = description;
         this.category = type;
         this.unitPrice = unitPrice;
         this.quantityOnHand = quantityOnHand;
+    }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -63,5 +75,12 @@ public class Part implements Serializable {
 
     public void incrementQuantityOnHand(int quantity) {
         this.quantityOnHand += quantity;
+    }
+
+    // Methods
+    @Override
+    public String toString() {
+        return String.format("[ID: %d], [Name: %s], [Description: %s], [Category: %s], [Unit Price: %.2f], [Quantity on Hand: %d]",
+                this.id, this.name, this.description, this.category, this.unitPrice, this.quantityOnHand);
     }
 }

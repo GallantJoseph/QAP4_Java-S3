@@ -8,22 +8,35 @@ import java.time.LocalDate;
  */
 
 public class Event implements Serializable {
+    // Private attributes
     private String name;
+    private String description;
     private String location;
     private LocalDate date;
 
-    public Event(String name, String location, LocalDate date){
+    // Constructor
+    public Event(String name, String description, String location, LocalDate date){
         this.name = name;
+        this.description = description;
         this.location = location;
         this.date = date;
     }
 
+    // Getters and Setters
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLocation() {
@@ -42,8 +55,9 @@ public class Event implements Serializable {
         this.date = date;
     }
 
+    // Methods
     @Override
     public String toString() {
-        return String.format("[Name: " + this.name + "], [Location: " + this.location + "], [Date: " + this.date + "]");
+        return String.format("[Name: %s], [Location: %s], [Date: %s]", this.name, this.location, this.date);
     }
 }

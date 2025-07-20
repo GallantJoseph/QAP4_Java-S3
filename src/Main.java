@@ -24,7 +24,7 @@ public class Main {
     private static void MainMenu(Scanner scanner) {
         final int MIN_OPT = 1;
         final int MAX_OPT = 5;
-        final String EVENT_FILENAME = "event.txt";
+        final String EVENT_FILENAME = "events.dat";
         int option = 0;
 
         while (option != 5) {
@@ -76,9 +76,12 @@ public class Main {
 
     private static void saveDataFile(String eventFilename) {
         // Create new Events to save to a file
-        Event beachEvent = new Event("Beach Party", "Sandy Cove Beach, NL", LocalDate.parse("2025-08-10"));
-        Event graduationEvent = new Event("Graduation Party", "Keyin College, St. John's, NL", LocalDate.parse("2025-11-15"));
-        Event marathonEvent = new Event("Marathon for Life", "Downtown St. John's", LocalDate.parse("2025-10-18"));
+        Event beachEvent = new Event("Beach Party", "Party with us at the beach!",
+                "Sandy Cove Beach, NL", LocalDate.parse("2025-08-10"));
+        Event graduationEvent = new Event("Graduation Party", "Celebrate our graduation of 2025!",
+                "Keyin College, St. John's, NL", LocalDate.parse("2025-11-15"));
+        Event marathonEvent = new Event("Marathon for Life", "Encourage healthier habits. Join us!",
+                "Downtown St. John's", LocalDate.parse("2025-10-18"));
 
         // Save the Event objects to a file
         try {
