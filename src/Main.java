@@ -1,6 +1,7 @@
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class Main {
     }
 
     private static void saveDataFile(String eventFilename) {
-        // Create new Events to save to a file
+        // Predefined values
         Event beachEvent = new Event("Beach Party", "Party with us at the beach!",
                 "Sandy Cove Beach, NL", LocalDate.parse("2025-08-10"));
         Event graduationEvent = new Event("Graduation Party", "Celebrate our graduation of 2025!",
@@ -109,14 +110,13 @@ public class Main {
     }
 
     private static void readDataFile(String eventFilename) {
+        // Create an Event list to store the Event objects be read from a file
+        final ArrayList<Event> events = new ArrayList<>();
 
         // Read the event objects from a file
         try {
             FileInputStream eventFis = new FileInputStream(eventFilename);
             ObjectInputStream eventOis = new ObjectInputStream(eventFis);
-
-            // Create an Event list to store the Event objects be read from a file
-            ArrayList<Event> events = new ArrayList<>();
 
             while (true) {
                 try {
@@ -143,9 +143,11 @@ public class Main {
     }
 
     private static void saveDataDB() {
+        // Query statement to insert parts
         final String query = "INSERT INTO parts (name, description, category, unit_price, quantity_on_hand) VALUES (?,?,?,?,?)";
         final ArrayList<Part> parts = new ArrayList<>();
 
+        // Predefined values
         Part cpuPart = new Part( "AMD Ryzen 5700G",
                 "AMD Ryzen 5700G Processor, Socket: AM4.", "cpu", 209.99, 10);
         Part mirrorPart = new Part("Chevrolet Spark 2019 Mirror (R)",
@@ -157,7 +159,7 @@ public class Main {
         parts.add(mirrorPart);
         parts.add(absPipe);
 
-        // Set up the connection and add every part to the database
+        // Set up the connection and insert every part to the database
         try {
             Connection con = DatabaseConnection.getCon();
 
@@ -181,6 +183,39 @@ public class Main {
     }
 
     private static void readDataDB() {
-        final String query = "SELECT * FROM part";
+        // Prepare a query to read all the entries in the parts table
+        final String query = "SELECT * FROM parts";
+        final ArrayList<Part> parts = new ArrayList<>();
+
+        // Prepare the connection to read from the database
+        try {
+            Connection con = DatabaseConnection.getCon();
+            PreparedStatement statement = con.prepareStatement(query);
+
+            ResultSet resSet = statement.executeQuery();
+
+            System.out.println("\nReading data from the database...");
+
+            // Read each record row until the end, and add each record to the parts list
+            while(resSet.next()) {
+                Part part = new Part(
+                        resSet.getString("name"),
+                        resSet.getString("description"),
+                        resSet.getString("category"),
+                        resSet.getDouble("unit_price"),
+                        resSet.getInt("quantity_on_hand")
+                        );
+
+                parts.add(part);
+                System.out.println(part.getName() + " has been read and added to the list successfully.");
+            }
+
+            System.out.println("\nParts in the list:");
+            for (Part part: parts) {
+                System.out.println(part);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
