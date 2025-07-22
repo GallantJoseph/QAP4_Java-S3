@@ -9,6 +9,8 @@ import java.time.LocalDate;
 
 public class Event implements Serializable {
     // Private attributes
+    private static int idCounter = 1;
+    private int id;
     private String name;
     private String description;
     private String location;
@@ -16,6 +18,7 @@ public class Event implements Serializable {
 
     // Constructor
     public Event(String name, String description, String location, LocalDate date){
+        this.id = idCounter++;
         this.name = name;
         this.description = description;
         this.location = location;
@@ -23,6 +26,14 @@ public class Event implements Serializable {
     }
 
     // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -58,6 +69,6 @@ public class Event implements Serializable {
     // Methods
     @Override
     public String toString() {
-        return String.format("[Name: %s], [Location: %s], [Date: %s]", this.name, this.location, this.date);
+        return String.format("[ID: %d], [Name: %s], [Location: %s], [Date: %s]", this.id, this.name, this.location, this.date);
     }
 }

@@ -144,6 +144,7 @@ public class Main {
 
     private static void saveDataDB() {
         // Query statement to insert parts
+        // The ID is set as SERIAL in the database, so we don't have to provide the ID in the INSERT statement
         final String query = "INSERT INTO parts (name, description, category, unit_price, quantity_on_hand) VALUES (?,?,?,?,?)";
         final ArrayList<Part> parts = new ArrayList<>();
 
@@ -206,6 +207,9 @@ public class Main {
                         resSet.getDouble("unit_price"),
                         resSet.getInt("quantity_on_hand")
                         );
+
+                // Use the ID that is stored in the database
+                part.setId(resSet.getInt("id"));
 
                 parts.add(part);
                 System.out.println(part.getName() + " has been read and added to the list successfully.");
