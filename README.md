@@ -8,6 +8,10 @@ The main program, including the menu, is stored in the Main class.
 </ul>
 
 <h2>Screenshots<h2>
+![Write Events to File](https://raw.github.com/GallantJoseph/QAP4_Java-S3/main/screenshots/WriteEventFile.png "Output of Write Events to File")
+![Read Events from File](https://raw.github.com/GallantJoseph/QAP4_Java-S3/main/screenshots/ReadEventFile.png "Output of Read Events from File")
+![Write Parts to Database](https://raw.github.com/GallantJoseph/QAP4_Java-S3/main/screenshots/WritePartDatabase.png "Output of Write Parts to Database")
+![Read Parts from Database](https://raw.github.com/GallantJoseph/QAP4_Java-S3/main/screenshots/ReadPartDatabase.png "Output of Read Parts from Database")
 
 <h2>QAP 4 Questionnaire</h2>
 <ol>

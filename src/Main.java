@@ -161,7 +161,7 @@ public class Main {
 
         // Set up the connection and insert every part to the database
         try {
-            Connection con = DatabaseConnection.getCon();
+            Connection con = DatabaseConnection.getConnection();
 
             for(Part part : parts) {
                 PreparedStatement statement = con.prepareStatement(query);
@@ -178,6 +178,7 @@ public class Main {
             }
 
         } catch (SQLException se) {
+            System.out.println("Error while saving the parts to the database.");
             se.printStackTrace();
         }
     }
@@ -189,7 +190,7 @@ public class Main {
 
         // Prepare the connection to read from the database
         try {
-            Connection con = DatabaseConnection.getCon();
+            Connection con = DatabaseConnection.getConnection();
             PreparedStatement statement = con.prepareStatement(query);
 
             ResultSet resSet = statement.executeQuery();
@@ -215,6 +216,7 @@ public class Main {
                 System.out.println(part);
             }
         } catch (Exception e) {
+            System.out.println("Error while reading the parts from the database.");
             e.printStackTrace();
         }
     }
