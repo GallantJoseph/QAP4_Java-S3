@@ -14,8 +14,8 @@ The main program, including the menu, is stored in the Main class.
 ![Read Events from File](/screenshots/ReadEventsFile.png "Output of Read Events from File")
 ### 3. Add an Event to the list:
 ![Add an Event to the list](/screenshots/AddEventToList.png "Output of Add an Event to the list")
-### 4. Write Parts to Database:
-![Write Parts to Database](/screenshots/WritePartsDatabase.png "Output of Write Parts to Database")
+### 4. Write Part to Database:
+![Write Part to Database](/screenshots/WritePartDatabase.png "Output of Write Part to Database")
 ### 5. Read Parts From Database:
 ![Read Parts from Database](/screenshots/ReadPartsDatabase.png "Output of Read Parts from Database")
 

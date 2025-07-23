@@ -188,13 +188,65 @@ public class Main {
     }
 
     private static void saveDataDB(Scanner scanner) {
-        // Query statement to insert parts
+        // Query statement to insert the new Part
         // The ID is set as SERIAL in the database, so we don't have to provide the ID in the INSERT statement
         final String query = "INSERT INTO parts (name, description, category, unit_price, quantity_on_hand) VALUES (?,?,?,?,?)";
 
-        Part part = new Part( "AMD Ryzen 5700G",
-                "AMD Ryzen 5700G Processor, Socket: AM4.", "cpu", 209.99, 10);
+        // Allow the user to input the data to be inserted
+        String name;
+        String description;
+        String category;
+        double unitPrice;
+        int quantityOnHand;
 
+        // Header
+        System.out.println("\nNew Part Details:");
+        System.out.println("--------------------------------------");
+
+        System.out.print("Name: ");
+        name = scanner.nextLine();
+
+        System.out.print("Description: ");
+        description = scanner.nextLine();
+
+        System.out.print("Category: ");
+        category = scanner.nextLine();
+
+        System.out.print("Unit Price: ");
+
+        // Unit Price validation
+        while (true) {
+            while (!scanner.hasNextDouble()){
+                System.out.println("Please enter a valid number.");
+                scanner.next();
+            }
+
+            unitPrice = scanner.nextDouble();
+            scanner.nextLine();
+
+            if (unitPrice < 0) {
+                System.out.println("Please enter a positive value.");
+            } else
+                break;
+        }
+
+        System.out.print("Quantity on Hand: ");
+
+        // Quantity on Hand validation
+        while (true) {
+            while (!scanner.hasNextInt()){
+                System.out.println("Please enter a valid number.");
+                scanner.next();
+            }
+
+            quantityOnHand = scanner.nextInt();
+            scanner.nextLine();
+
+            if (quantityOnHand < 0) {
+                System.out.println("Please enter a positive value.");
+            } else
+                break;
+        }
 
         // Set up the connection and insert the part to the database
         try {
@@ -202,18 +254,18 @@ public class Main {
 
             PreparedStatement statement = con.prepareStatement(query);
 
-            statement.setString(1, part.getName());
-            statement.setString(2, part.getDescription());
-            statement.setString(3, part.getCategory());
-            statement.setDouble(4, part.getUnitPrice());
-            statement.setInt(5, part.getQuantityOnHand());
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setString(3, category);
+            statement.setDouble(4, unitPrice);
+            statement.setInt(5, quantityOnHand);
 
             statement.executeUpdate();
 
-            System.out.println(part.getName() + " successfully added to the database.");
+            System.out.println("\n" + name + " added successfully to the database.\n");
 
         } catch (SQLException se) {
-            System.out.println("Error while saving the parts to the database.");
+            System.out.println("\nError while saving the parts to the database.\n");
             se.printStackTrace();
         }
     }
