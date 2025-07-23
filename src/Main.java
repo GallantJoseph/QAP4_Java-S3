@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,30 +17,32 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ArrayList<Event> eventsList = new ArrayList<>();
 
         // Program header
         System.out.println("***** Database and File Handling *****\n");
 
-        MainMenu(scanner);
+        MainMenu(scanner, eventsList);
 
         System.out.println("\n*** Thank you for using my program. Have a nice day! ***");
     }
 
-    private static void MainMenu(Scanner scanner) {
+    private static void MainMenu(Scanner scanner, ArrayList<Event> eventsList) {
         final int MIN_OPT = 1;
-        final int MAX_OPT = 5;
+        final int MAX_OPT = 6;
         final String EVENT_FILENAME = "events.dat";
         int option = 0;
 
-        while (option != 5) {
+        while (option != MAX_OPT) {
             // Header
             System.out.println("\n              Main Menu               ");
             System.out.println("**************************************");
             System.out.println("1. Save data to a file");
             System.out.println("2. Read data from a file");
-            System.out.println("3. Save data to a database");
-            System.out.println("4. Read data from a database");
-            System.out.println("5. Quit");
+            System.out.println("3. Add an Event to the list");
+            System.out.println("4. Save data to a database");
+            System.out.println("5. Read data from a database");
+            System.out.println("6. Quit");
             System.out.println("**************************************\n");
             System.out.print("Make a selection: ");
 
@@ -51,6 +54,7 @@ public class Main {
                 }
 
                 option = scanner.nextInt();
+                scanner.nextLine();
 
                 if (option >= MIN_OPT && option <= MAX_OPT){
                     break;
@@ -61,15 +65,18 @@ public class Main {
 
             switch (option){
                 case 1:
-                    saveDataFile(EVENT_FILENAME);
+                    saveDataFile(EVENT_FILENAME, eventsList);
                     break;
                 case 2:
-                    readDataFile(EVENT_FILENAME);
+                    eventsList = readDataFile(EVENT_FILENAME);
                     break;
                 case 3:
-                    saveDataDB();
+                    addEvent(scanner, eventsList);
                     break;
                 case 4:
+                    saveDataDB(scanner);
+                    break;
+                case 5:
                     readDataDB();
                     break;
                 default:
@@ -78,49 +85,41 @@ public class Main {
         }
     }
 
-    private static void saveDataFile(String eventFilename) {
-        // Predefined values
-        Event beachEvent = new Event("Beach Party", "Party with us at the beach!",
-                "Sandy Cove Beach, NL", LocalDate.parse("2025-08-10"));
-        Event graduationEvent = new Event("Graduation Party", "Celebrate our graduation of 2025!",
-                "Keyin College, St. John's, NL", LocalDate.parse("2025-11-15"));
-        Event marathonEvent = new Event("Marathon for Life", "Encourage healthier habits. Join us!",
-                "Downtown St. John's", LocalDate.parse("2025-10-18"));
-
+    // Save all the elements stored in the eventsList to a file
+    private static void saveDataFile(String eventFilename, ArrayList<Event> eventsList) {
         // Save the Event objects to a file
+        System.out.println("\nEvent objects saved successfully to " + eventFilename + ":\n");
+
         try {
             FileOutputStream eventFos = new FileOutputStream(eventFilename);
             ObjectOutputStream eventOos = new ObjectOutputStream(eventFos);
 
-            eventOos.writeObject(beachEvent);
-            eventOos.writeObject(graduationEvent);
-            eventOos.writeObject(marathonEvent);
+            // Write each Event from the list to the file
+            for (Event event: eventsList){
+                eventOos.writeObject(event);
+                System.out.println(event);
+            }
 
             eventFos.close();
             eventOos.close();
-
-            System.out.println("\nEvent objects saved successfully to " + eventFilename + ":\n");
-            System.out.println(beachEvent);
-            System.out.println(graduationEvent);
-            System.out.println(marathonEvent);
         } catch (IOException ioe) {
             System.out.println("\nError while saving the Event objects to " + eventFilename);
             ioe.printStackTrace();
         }
     }
 
-    private static void readDataFile(String eventFilename) {
-        // Create an Event list to store the Event objects be read from a file
-        final ArrayList<Event> events = new ArrayList<>();
+    // Read the file and add each Event to a list that will be returned
+    private static ArrayList<Event> readDataFile(String eventFilename) {
+        ArrayList<Event> eventsList = new ArrayList<Event>();
 
-        // Read the event objects from a file
+        // Read the event objects from a file and add them to the list
         try {
             FileInputStream eventFis = new FileInputStream(eventFilename);
             ObjectInputStream eventOis = new ObjectInputStream(eventFis);
 
             while (true) {
                 try {
-                    events.add((Event) eventOis.readObject());
+                    eventsList.add((Event) eventOis.readObject());
                 } catch (ClassNotFoundException | EOFException e) {
                     break;
                 }
@@ -132,7 +131,7 @@ public class Main {
             System.out.println("\nEvent objects read successfully from " + eventFilename + ":\n");
 
             // Print each Event from the list
-            events.forEach(System.out::println);
+            eventsList.forEach(System.out::println);
         }  catch (FileNotFoundException fnfe) {
             System.out.println("\nThe file " + eventFilename + " doesn't exist.");
         }
@@ -140,43 +139,78 @@ public class Main {
             System.out.println("\nError while reading the Event objects from " + eventFilename);
             ioe.printStackTrace();
         }
+
+        return eventsList;
     }
 
-    private static void saveDataDB() {
+    // Let the user add an Event manually with the use of a Scanner
+    private static void addEvent(Scanner scanner, ArrayList<Event> eventsList){
+        String name;
+        String description;
+        String location;
+        LocalDate date;
+
+        // Header
+        System.out.println("\nNew Event Details:");
+        System.out.println("--------------------------------------");
+
+        System.out.print("Name: ");
+        name = scanner.nextLine();
+
+        System.out.print("Description: ");
+        description = scanner.nextLine();
+
+        System.out.print("Location: ");
+        location = scanner.nextLine();
+
+        System.out.print("Date (YYYY-MM-DD): ");
+
+        // Date validation
+        while (true){
+            try {
+                date = LocalDate.parse(scanner.nextLine());
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date. Please try again.");
+            }
+        }
+
+        try {
+            Event event = new Event(name, description, location, date);
+            eventsList.add(event);
+
+            System.out.println("\nEvent " + event.getName() + " added successfully.\n");
+        } catch (Exception e) {
+            System.out.println("\nError while adding the Event to the list.\n");
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void saveDataDB(Scanner scanner) {
         // Query statement to insert parts
         // The ID is set as SERIAL in the database, so we don't have to provide the ID in the INSERT statement
         final String query = "INSERT INTO parts (name, description, category, unit_price, quantity_on_hand) VALUES (?,?,?,?,?)";
-        final ArrayList<Part> parts = new ArrayList<>();
 
-        // Predefined values
-        Part cpuPart = new Part( "AMD Ryzen 5700G",
+        Part part = new Part( "AMD Ryzen 5700G",
                 "AMD Ryzen 5700G Processor, Socket: AM4.", "cpu", 209.99, 10);
-        Part mirrorPart = new Part("Chevrolet Spark 2019 Mirror (R)",
-                "Right mirror for the 2019 Chevrolet Spark.", "mirror", 199.99, 2);
-        Part absPipe = new Part("1/2\" ABS Pipe 8'",
-                "Generic 8' 1/2\" ABS Pipe", "pipe", 15.99,20);
 
-        parts.add(cpuPart);
-        parts.add(mirrorPart);
-        parts.add(absPipe);
 
-        // Set up the connection and insert every part to the database
+        // Set up the connection and insert the part to the database
         try {
             Connection con = DatabaseConnection.getConnection();
 
-            for(Part part : parts) {
-                PreparedStatement statement = con.prepareStatement(query);
+            PreparedStatement statement = con.prepareStatement(query);
 
-                statement.setString(1, part.getName());
-                statement.setString(2, part.getDescription());
-                statement.setString(3, part.getCategory());
-                statement.setDouble(4, part.getUnitPrice());
-                statement.setInt(5, part.getQuantityOnHand());
+            statement.setString(1, part.getName());
+            statement.setString(2, part.getDescription());
+            statement.setString(3, part.getCategory());
+            statement.setDouble(4, part.getUnitPrice());
+            statement.setInt(5, part.getQuantityOnHand());
 
-                statement.executeUpdate();
+            statement.executeUpdate();
 
-                System.out.println(part.getName() + " successfully added to the database.");
-            }
+            System.out.println(part.getName() + " successfully added to the database.");
 
         } catch (SQLException se) {
             System.out.println("Error while saving the parts to the database.");
