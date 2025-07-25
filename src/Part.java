@@ -3,7 +3,7 @@ import java.io.Serializable;
 /**
  * Description: QAP 4 - Database and File Handling - Part Class
  * Author: Joseph Gallant
- * Date(s): July 17, 2025
+ * Date(s): July 17, 2025 - July 25, 2025
  */
 
 public class Part implements Serializable {
@@ -16,7 +16,7 @@ public class Part implements Serializable {
     private double unitPrice;
     private int quantityOnHand;
 
-    // Constructor
+    // Constructors
     public Part(String name, String description, String category, double unitPrice, int quantityOnHand){
         this.id = idCounter++;
         this.name = name;
@@ -26,7 +26,27 @@ public class Part implements Serializable {
         this.quantityOnHand = quantityOnHand;
     }
 
+    // If an ID is provided, assume it's the last value and assign it and increment the idCounter
+    public Part(int id, String name, String description, String category, double unitPrice, int quantityOnHand){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.unitPrice = unitPrice;
+        this.quantityOnHand = quantityOnHand;
+
+        idCounter = id + 1;
+    }
+
     // Getters and Setters
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Part.idCounter = idCounter;
+    }
+
     public int getId() {
         return id;
     }

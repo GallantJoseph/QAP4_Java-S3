@@ -1,8 +1,9 @@
 # QAP4_Java-S3
 # Database and File Handling
 
-Practice assessment for reading and writing Event objects to, and from a file; and Part objects to, and from a database.
-The main program, including the menu, is stored in the Main class.
+Practice assessment for reading and writing Event objects to, and from a file; and Part objects to, and from a database. 
+The main program, including the menu, is stored in the Main class. 
+The "parts" database can be created with the "create_parts_table.sql" stored in the "scripts" folder.
 
 - The Event class stores information about events, such as parties, weddings, and graduations.
 + The Part class stores information about parts, such as computers, cars, and plumbing.
@@ -26,7 +27,8 @@ The main program, including the menu, is stored in the Main class.
    * Menu: 1 hour
    * Reading and Writing to a file: 1-2 hours
    * Add an Event to the list: 30 minutes
-   + Reading and Writing to a database: 2-3 hours
+   * Reading and Writing to a database: 2-3 hours
+   + Improvements, additions, review: ~5 hours
     
 2. What online resources did you use? Stack Overflow
 3. Did you get help from any classmates? No, but I have discussed the different aspects of the project with Justin Greenslade, to make sure that we haven't forgotten anything.

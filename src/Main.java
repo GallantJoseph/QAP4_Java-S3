@@ -11,23 +11,24 @@ import java.util.Scanner;
 /**
  * Description: QAP 4 - Database and File Handling - Main program and Menu
  * Author: Joseph Gallant
- * Date(s): July 17, 2025
+ * Date(s): July 17, 2025 - July 25, 2025
  */
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Event> eventsList = new ArrayList<>();
+        ArrayList<Part> partsList = new ArrayList<>();
 
         // Program header
         System.out.println("***** Database and File Handling *****\n");
 
-        MainMenu(scanner, eventsList);
+        MainMenu(scanner, eventsList, partsList);
 
         System.out.println("\n*** Thank you for using my program. Have a nice day! ***");
     }
 
-    private static void MainMenu(Scanner scanner, ArrayList<Event> eventsList) {
+    private static void MainMenu(Scanner scanner, ArrayList<Event> eventsList, ArrayList<Part> partsList) {
         final int MIN_OPT = 1;
         final int MAX_OPT = 6;
         final String EVENT_FILENAME = "events.dat";
@@ -77,7 +78,7 @@ public class Main {
                     saveDataDB(scanner);
                     break;
                 case 5:
-                    readDataDB();
+                    partsList = readDataDB();
                     break;
                 default:
                     break;
@@ -110,19 +111,28 @@ public class Main {
 
     // Read the file and add each Event to a list that will be returned
     private static ArrayList<Event> readDataFile(String eventFilename) {
-        ArrayList<Event> eventsList = new ArrayList<Event>();
+        ArrayList<Event> eventsList = new ArrayList<>();
 
         // Read the event objects from a file and add them to the list
         try {
             FileInputStream eventFis = new FileInputStream(eventFilename);
             ObjectInputStream eventOis = new ObjectInputStream(eventFis);
 
+            // The Events should be stored with their ID in order
+            // The setIdCounter can then take the last value that was read, to keep track of the last ID
             while (true) {
                 try {
-                    eventsList.add((Event) eventOis.readObject());
+                    Event event = (Event) eventOis.readObject();
+                    eventsList.add(event);
                 } catch (ClassNotFoundException | EOFException e) {
                     break;
                 }
+            }
+
+            // If there were Events objects in the file, use the last ID that was read
+            // as a reference for the next ID to use
+            if (!eventsList.isEmpty()){
+                Event.setIdCounter(eventsList.getLast().getId() + 1);
             }
 
             eventFis.close();
@@ -184,7 +194,6 @@ public class Main {
             System.out.println("\nError while adding the Event to the list.\n");
             e.printStackTrace();
         }
-
     }
 
     private static void saveDataDB(Scanner scanner) {
@@ -270,7 +279,7 @@ public class Main {
         }
     }
 
-    private static void readDataDB() {
+    private static ArrayList<Part> readDataDB() {
         // Prepare a query to read all the entries in the parts table
         final String query = "SELECT * FROM parts";
         final ArrayList<Part> parts = new ArrayList<>();
@@ -287,6 +296,7 @@ public class Main {
             // Read each record row until the end, and add each record to the parts list
             while(resSet.next()) {
                 Part part = new Part(
+                        resSet.getInt("id"),
                         resSet.getString("name"),
                         resSet.getString("description"),
                         resSet.getString("category"),
@@ -294,11 +304,14 @@ public class Main {
                         resSet.getInt("quantity_on_hand")
                         );
 
-                // Use the ID that is stored in the database
-                part.setId(resSet.getInt("id"));
-
                 parts.add(part);
                 System.out.println(part.getName() + " has been read and added to the list successfully.");
+            }
+
+            // If there are Part rows in the database, use the last ID that was read
+            // as a reference for the next ID to use
+            if (!parts.isEmpty()){
+                Part.setIdCounter(parts.getLast().getId() + 1);
             }
 
             System.out.println("\nParts in the list:");
@@ -309,5 +322,7 @@ public class Main {
             System.out.println("Error while reading the parts from the database.");
             e.printStackTrace();
         }
+
+        return parts;
     }
 }
