@@ -88,6 +88,6 @@ public class Event implements Serializable {
     // Methods
     @Override
     public String toString() {
-        return String.format("[ID: %d], [Name: %s], [Location: %s], [Date: %s]", this.id, this.name, this.location, this.date);
+        return String.format("[ID: %d], [Name: %s], [Description: %s], [Location: %s], [Date: %s]", this.id, this.name,this.description, this.location, this.date);
     }
 }
