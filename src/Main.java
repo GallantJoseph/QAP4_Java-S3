@@ -88,6 +88,12 @@ public class Main {
 
     // Save all the elements stored in the eventsList to a file
     private static void saveDataFile(String eventFilename, ArrayList<Event> eventsList) {
+        // If there is nothing in the list, display a message and return to the main menu
+        if (eventsList.isEmpty()) {
+            System.out.println("\nNo Events to save. Add some first.");
+            return;
+        }
+
         // Save the Event objects to a file
         System.out.println("\nEvent objects saved successfully to " + eventFilename + ":\n");
 
@@ -138,10 +144,15 @@ public class Main {
             eventFis.close();
             eventOis.close();
 
-            System.out.println("\nEvent objects read successfully from " + eventFilename + ":\n");
+            // If the file contains Event object, show each of them
+            if (!eventsList.isEmpty()){
+                System.out.println("\nEvent objects read successfully from " + eventFilename + "\n");
 
-            // Print each Event from the list
-            eventsList.forEach(System.out::println);
+                // Print each Event from the list
+                eventsList.forEach(System.out::println);
+            } else{
+                System.out.println("\nNo Event objects stored in " + eventFilename + ".\n");
+            }
         }  catch (FileNotFoundException fnfe) {
             System.out.println("\nThe file " + eventFilename + " doesn't exist.");
         }
