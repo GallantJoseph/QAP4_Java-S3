@@ -66,10 +66,10 @@ public class Main {
 
             switch (option){
                 case 1:
-                    saveDataFile(EVENT_FILENAME, eventsList);
+                    saveDataFile(EVENT_FILENAME, eventsList, scanner);
                     break;
                 case 2:
-                    eventsList = readDataFile(EVENT_FILENAME);
+                    eventsList = readDataFile(EVENT_FILENAME, scanner);
                     break;
                 case 3:
                     addEvent(scanner, eventsList);
@@ -78,7 +78,7 @@ public class Main {
                     saveDataDB(scanner);
                     break;
                 case 5:
-                    partsList = readDataDB();
+                    partsList = readDataDB(scanner);
                     break;
                 default:
                     break;
@@ -87,7 +87,7 @@ public class Main {
     }
 
     // Save all the elements stored in the eventsList to a file
-    private static void saveDataFile(String eventFilename, ArrayList<Event> eventsList) {
+    private static void saveDataFile(String eventFilename, ArrayList<Event> eventsList, Scanner scanner) {
         // If there is nothing in the list, display a message and return to the main menu
         if (eventsList.isEmpty()) {
             System.out.println("\nNo Events to save. Add some first.");
@@ -112,10 +112,13 @@ public class Main {
         } catch (IOException ioe) {
             System.out.println("\nError while saving the Event objects to " + eventFilename + ": " + ioe.getMessage());
         }
+
+        System.out.print("\nPress Enter to continue.");
+        scanner.nextLine();
     }
 
     // Read the file and add each Event to a list that will be returned
-    private static ArrayList<Event> readDataFile(String eventFilename) {
+    private static ArrayList<Event> readDataFile(String eventFilename, Scanner scanner) {
         ArrayList<Event> eventsList = new ArrayList<>();
 
         // Read the event objects from a file and add them to the list
@@ -158,6 +161,9 @@ public class Main {
         catch (IOException ioe) {
             System.out.println("\nError while reading the Event objects from " + eventFilename + ": " + ioe.getMessage());
         }
+
+        System.out.print("\nPress Enter to continue.");
+        scanner.nextLine();
 
         return eventsList;
     }
@@ -202,6 +208,9 @@ public class Main {
         } catch (Exception e) {
             System.out.println("\nError while adding the Event to the list: " + e.getMessage() + "\n");
         }
+
+        System.out.print("\nPress Enter to continue.");
+        scanner.nextLine();
     }
 
     private static void saveDataDB(Scanner scanner) {
@@ -286,9 +295,12 @@ public class Main {
         } catch (NullPointerException npe) {
             System.out.println("\nError while connecting to the database: " + npe.getMessage() + "\n");
         }
+
+        System.out.print("\nPress Enter to continue.");
+        scanner.nextLine();
     }
 
-    private static ArrayList<Part> readDataDB() {
+    private static ArrayList<Part> readDataDB(Scanner scanner) {
         // Prepare a query to read all the entries in the parts table
         final String query = "SELECT * FROM parts";
         final ArrayList<Part> parts = new ArrayList<>();
@@ -332,6 +344,9 @@ public class Main {
         } catch (NullPointerException npe) {
             System.out.println("\nError while connecting to the database: " + npe.getMessage() + "\n");
         }
+        
+        System.out.print("\nPress Enter to continue.");
+        scanner.nextLine();
 
         return parts;
     }
