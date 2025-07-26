@@ -110,8 +110,7 @@ public class Main {
             eventFos.close();
             eventOos.close();
         } catch (IOException ioe) {
-            System.out.println("\nError while saving the Event objects to " + eventFilename);
-            ioe.printStackTrace();
+            System.out.println("\nError while saving the Event objects to " + eventFilename + ": " + ioe.getMessage());
         }
     }
 
@@ -157,8 +156,7 @@ public class Main {
             System.out.println("\nThe file " + eventFilename + " doesn't exist.");
         }
         catch (IOException ioe) {
-            System.out.println("\nError while reading the Event objects from " + eventFilename);
-            ioe.printStackTrace();
+            System.out.println("\nError while reading the Event objects from " + eventFilename + ": " + ioe.getMessage());
         }
 
         return eventsList;
@@ -202,8 +200,7 @@ public class Main {
 
             System.out.println("\nEvent " + event.getName() + " added successfully.\n");
         } catch (Exception e) {
-            System.out.println("\nError while adding the Event to the list.\n");
-            e.printStackTrace();
+            System.out.println("\nError while adding the Event to the list: " + e.getMessage() + "\n");
         }
     }
 
@@ -285,8 +282,9 @@ public class Main {
             System.out.println("\n" + name + " added successfully to the database.\n");
 
         } catch (SQLException se) {
-            System.out.println("\nError while saving the parts to the database.\n");
-            se.printStackTrace();
+            System.out.println("\nError while saving the parts to the database: " + se.getMessage() + "\n");
+        } catch (NullPointerException npe) {
+            System.out.println("\nError while connecting to the database: " + npe.getMessage() + "\n");
         }
     }
 
@@ -329,9 +327,10 @@ public class Main {
             for (Part part: parts) {
                 System.out.println(part);
             }
-        } catch (Exception e) {
-            System.out.println("Error while reading the parts from the database.");
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error while reading the parts from the database: " + e.getMessage());
+        } catch (NullPointerException npe) {
+            System.out.println("\nError while connecting to the database: " + npe.getMessage() + "\n");
         }
 
         return parts;
